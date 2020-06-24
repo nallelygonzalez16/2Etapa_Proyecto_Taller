@@ -756,5 +756,5 @@ def MenuModificarPersona():
         print("El programa ha finalizado")
         exit
     return 
-
+print("holamundo")
 
