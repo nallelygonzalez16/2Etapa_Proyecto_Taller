@@ -3,7 +3,7 @@ import datetime
 from datetime import date
 
 def CreaCedulas():
-    numeroCed = random.sample(range(100000000,800000000),20)
+    numeroCed = random.sample(range(100000000,800000000),2000)
     return numeroCed
 def listaFormaRostro():
     lista = ["Redondo", "Alargado", "Corazón", "Cuadrado", "Ovalado","Rectangular"]
@@ -424,6 +424,7 @@ def creaObjetoGenero():
         lista.append(g)
         contador=contador+1
     return lista
+
 def creaObjetoProvincia():
     lista = []
     Provincias = listaProvincia()
@@ -628,8 +629,9 @@ def CalcularProvincia(cedula):
         elif primerNum == "6":
             if "Puntarenas" == provincia.get_nombre():
                 return provincia   
-        else:
-            return provincia 
+        elif primerNum == "7":
+            if "Limón" == provincia.get_nombre():
+                return provincia 
 
 def CrearObjetoPersona(cedulas):
     Personas=[]
@@ -706,12 +708,54 @@ def BuscarPersona(muestra,seleccion):
     return personaModificar
 
 def ModificarListaRopa(persona):
+    Ropa=creaObjetoRopa()
     print("Lista de ropa de la persona")
     for vestuario in persona.get_vestuario():
         for ropa in vestuario.get_ropa():
-                print("►",ropa.get_nombre())
+            print("►",ropa.get_nombre())
     print("Opciones para agregara a la lista:","\n","►",("     ► ".join(listaRopa())))
+    prendaNueva=int(input("Digite el numero de la prenda que desea agregar: "))
+    for prenda in Ropa:
+        if prendaNueva == prenda.identificador:
+            print("Usted escogio la prenda: ", prenda.get_nombre())
+            for vestuario in persona.get_vestuario():
+                vestuario.set_ropa(prenda)
+    for vestuario in persona.get_vestuario():
+        for ropa in vestuario.get_ropa():
+            print(ropa.get_nombre())
     return 
+
+def ModificarListaAccesorios(persona):
+    accesorios=creaObjetoAccesorio()
+    print("Lista de accesorio de la persona")
+    for vestuario in persona.get_vestuario():
+        for ACCESORIO in vestuario.get_accesorio():
+            print("►",ACCESORIO.get_nombre())
+    print("Opciones para agregara a la lista:","\n","►",("     ► ".join(listaAccesorios())))
+    accesorioNuevo=int(input("Digite el numero del accesorio que desea agregar: "))
+    for accesorio in accesorios:
+        if accesorioNuevo == accesorio.identificador:
+            print("Usted escogio el accesorio: ", accesorio.get_nombre())
+            for vestuario in persona.get_vestuario():
+                vestuario.set_accesorio(accesorios)
+    for vestuario in persona.get_vestuario():
+        for ACCESORIO in vestuario.get_accesorio():
+            print(ACCESORIO.get_nombre())
+    return 
+
+def ModificarCalzado(persona):
+    calzados = creaObjetoCalzado()
+    for vestuario in persona.get_vestuario():
+        print("La persona tiene el calzado: ",vestuario.get_calzado().get_nombre())
+    print("Opciones de calzado para modificar:","\n","►",("     ► ".join(listaCalzado())))
+    calzadoNuevo = int(input("Digite el número correspondiente al calzado que desea modificar: "))
+    for calzado in calzados:
+        if calzadoNuevo == calzado.identificador:
+            print("Usted eligió el calzado: ", calzado.get_nombre())
+            vestuario.set_calzado(calzado)
+    for zapatos in persona.get_vestuario():
+        print(zapatos.get_calzado().get_nombre())
+    return
 
 def MenuModificarPersona():
     print("Muestra de las personas que usted puede modificar")
@@ -727,14 +771,11 @@ def MenuModificarPersona():
         print(persona.get_cedula())
         for vestuario in persona.get_vestuario():
             print(vestuario.get_calzado().get_nombre())
-            print(vestuario.get_calzado().get_identificador())
             for ropa in vestuario.get_ropa():
                 print(ropa.get_nombre())
-                print(ropa.get_identificador())
             for accesorios in vestuario.get_accesorio():
                 print(accesorios.get_nombre())
-                print(accesorios.get_identificador())
-        contador=contador
+            contador=contador+1
     try:
         seleccion=input("Digite el numero correspondiente a la persona que desea modificar: ")
         persona=BuscarPersona(muestra,seleccion)
@@ -752,9 +793,105 @@ def MenuModificarPersona():
         opcionModificar = int(input("Ingrese el número correspondiente a la opcion que desea realizar: "))
         if opcionModificar == 1:
             ModificarListaRopa(persona)
+        elif opcionModificar == 2:
+            ModificarListaAccesorios(persona)
+        elif opcionModificar == 3:
+            ModificarCalzado(persona)
     except ValueError:
         print("El programa ha finalizado")
         exit
     return 
-print("holamundo")
 
+def CalcularCantidades(lista):
+    sanJose=0
+    alajuela=0
+    cartago=0
+    heredia=0
+    guanacaste=0
+    puntarena=0
+    limon=0
+    for persona in lista:
+        if persona.get_provincia().get_identificador() == 1:
+            sanJose= sanJose+1
+        elif persona.get_provincia().get_identificador() == 2:
+            alajuela= alajuela+1
+        elif persona.get_provincia().get_identificador() == 3:
+            cartago= cartago+1
+        elif persona.get_provincia().get_identificador() == 4:
+            heredia= heredia+1
+        elif persona.get_provincia().get_identificador() == 5:
+            guanacaste= guanacaste+1
+        elif persona.get_provincia().get_identificador() == 6:
+            puntarena= puntarena+1
+        elif persona.get_provincia().get_identificador() == 7:
+            limon= limon+1
+    provincias=[sanJose,alajuela,cartago,heredia,guanacaste,puntarena,limon]
+    porcentajes=[]
+    for provincia in provincias:
+        porcentaje=(provincia/len(lista))*100
+        porcentajes.append(porcentaje)
+    cantidades=[provincias,porcentajes]
+    return cantidades
+
+def InformeAccesorios():
+    print("Opciones para agregara a la lista:","\n","►",("     ► ".join(listaAccesorios())))
+    opcionAccesorio = int(input("Ingrese el número correspondiente al accesorio que desea consultar: "))
+    accesorios=creaObjetoAccesorio()
+    for accesorio in accesorios:
+        if opcionAccesorio == accesorio.get_identificador():
+            print(accesorio.get_nombre())
+    accesorioelegido=[]
+    for persona in TotalPersonas:
+        for vestuario in persona.get_vestuario():
+            for ACCESORIO in vestuario.get_accesorio():
+                if ACCESORIO.get_identificador() == opcionAccesorio:
+                    accesorioelegido.append(persona)
+    masculino=[]
+    femenino=[]
+    for persona in accesorioelegido:
+        if persona.get_genero().get_identificador() == 1:
+            femenino.append(persona)
+        else:
+            masculino.append(persona)
+    Pronvincias= listaProvincia()
+    listaFemenino=CalcularCantidades(femenino)
+    i=0
+    print("Genero: Femenino ")
+    print("\t","\t","\t","Cantidad de personas","\t","Porcentaje","Provincia")
+    i=0
+    while i < len(Pronvincias):
+        print("\t","\t","\t",listaFemenino[0][i],"\t","{0:.2f}".format(listaFemenino[1][i]),"%",Pronvincias[i])
+        i=i+1
+    print("\t","\t","\t",len(femenino),"\t","100 %","\t","Total Femeninas")
+    listaMasculino=CalcularCantidades(masculino)
+    print("Genero: Masculino ")
+    print("\t","\t","\t","Cantidad de personas","\t","Porcentaje","Provincia")
+    x=0
+    while x < len(Pronvincias):
+        print("\t","\t","\t",listaMasculino[0][x],"\t","{0:.3f}".format(listaMasculino[1][x]),"%",Pronvincias[x])
+        x=x+1
+    print("\t","\t","\t",len(masculino),"\t","100 %","\t","Total Masculinos")
+    print("\n","\t","Total de personas que usan el accesorio: ",len(accesorioelegido))
+    return
+
+def Informes():
+    print("                    ╓─────────────────────────────────────────────────────────────────╖\n"
+        "                    ║                Opciones de informes a consultar                 ║\n"
+        "                    ╟─────────────────────────────────────────────────────────────────╢\n"
+        "                    ║ o 1) Cantidad y los porcentages de las personas que usan un     ║\n"
+        "                    ║      determinado accesorio segun el genero y la provincia       ║\n"
+        "                    ║ o 2) Consultar la informacion de las perosnas que cumplan       ║\n"
+        "                    ║      con una serie de caracteristicas elegidas por el analista  ║\n"
+        "                    ║ o 3) Cancelar acción y volver a menu principal                  ║\n"
+        "                    ╙─────────────────────────────────────────────────────────────────╜")
+    try:
+        opcionModificar = int(input("Ingrese el número correspondiente a la opcion que desea realizar: "))
+        if opcionModificar == 1:
+            InformeAccesorios()
+        elif opcionModificar == 2:
+            """InformaPersonas()"""
+    except ValueError:
+        print("El programa ha finalizado")
+        exit
+    return 
+Informes()
